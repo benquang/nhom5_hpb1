@@ -12,6 +12,7 @@ public class ShipOrderCommand {
 	@TargetAggregateIdentifier
 	private String shipmentid;
 	private String orderid;
+	private String user;
 	
 	public String getShipmentid() {
 		return shipmentid;
@@ -24,6 +25,12 @@ public class ShipOrderCommand {
 	}
 	public void setOrderid(String orderid) {
 		this.orderid = orderid;
+	}
+	public String getUser() {
+		return user;
+	}
+	public void setUser(String user) {
+		this.user = user;
 	}
 	
 	

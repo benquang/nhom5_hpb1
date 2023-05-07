@@ -22,7 +22,10 @@ public class ShipmentEventsHandler {
 	public void on(OrderShippedEvent event) {
 		Shipment shipment = new Shipment();
 		
-		BeanUtils.copyProperties(event, shipment);
+		shipment.setShipmentid(event.getShipmentid());
+		shipment.setOrderid(event.getOrderid());
+		shipment.setShipmentstatus(event.getShipmentstatus());
+		//BeanUtils.copyProperties(event, shipment);
 		
 		shipmentRepository.save(shipment);
 	}

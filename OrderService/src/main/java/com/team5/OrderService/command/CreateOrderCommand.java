@@ -2,10 +2,11 @@ package com.team5.OrderService.command;
 
 import java.util.List;
 
-import com.team5.OrderService.model.LineItems;
 import lombok.Builder;
 import lombok.Data;
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
+
+import com.team5.CommonService.model.LineItems;
 
 @Data
 @Builder
@@ -19,7 +20,7 @@ public class CreateOrderCommand {
 	private String email;
 	private String address;
 	private String ordernote;
-	private List<LineItems> lineitems;
+	private List<com.team5.CommonService.model.LineItems> lineitems;
 	private Double total;
 	private String orderstatus;
 	

@@ -28,19 +28,24 @@ public class OrderCommandController {
         CreateOrderCommand createOrderCommand = new CreateOrderCommand();
         createOrderCommand.setOrderid(orderid);
         
-        //createOrderCommand.setUser(orderRestModel.getUser());
+        createOrderCommand.setUser(orderRestModel.getUser());
         createOrderCommand.setFullname(orderRestModel.getFullname());
         createOrderCommand.setPhone(orderRestModel.getPhone());
         createOrderCommand.setEmail(orderRestModel.getEmail());
         createOrderCommand.setAddress(orderRestModel.getAddress());
         createOrderCommand.setOrdernote(orderRestModel.getOrdernote());
         createOrderCommand.setLineitems(orderRestModel.getLineitems());
-        createOrderCommand.setTotal(100.5);
+        //
+        Double total = 0.0;
+        for (int i = 0; i < orderRestModel.getLineitems().size(); i++) {
+        	total += orderRestModel.getLineitems().get(i).getUnitprice() * orderRestModel.getLineitems().get(i).getQuantity();
+        }
+        createOrderCommand.setTotal(total);
         createOrderCommand.setOrderstatus("CREATED");
         
         commandGateway.sendAndWait(createOrderCommand);
 
-		return "Order created";
+		return "Order Created";
 	}
 
 }

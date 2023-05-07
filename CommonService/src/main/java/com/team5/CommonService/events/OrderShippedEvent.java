@@ -11,6 +11,8 @@ public class OrderShippedEvent {
 	private String orderid;
 	private String shipmentstatus;
 	
+    private String user;
+	
 	public String getShipmentid() {
 		return shipmentid;
 	}
@@ -28,6 +30,12 @@ public class OrderShippedEvent {
 	}
 	public void setShipmentstatus(String shipmentstatus) {
 		this.shipmentstatus = shipmentstatus;
+	}
+	public String getUser() {
+		return user;
+	}
+	public void setUser(String user) {
+		this.user = user;
 	}
 	
 	

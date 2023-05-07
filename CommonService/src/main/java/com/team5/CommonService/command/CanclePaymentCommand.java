@@ -12,12 +12,24 @@ public class CanclePaymentCommand {
 	private String orderid;
 	private String paymentstatus = "CANCELLED";
 	
-	public CanclePaymentCommand() {}
-	
-
-	public CanclePaymentCommand(String paymentid, String orderid) {
-		this.paymentid = paymentid;
-		this.orderid = orderid;
-		
+	public String getPaymentid() {
+		return paymentid;
 	}
+	public void setPaymentid(String paymentid) {
+		this.paymentid = paymentid;
+	}
+	public String getOrderid() {
+		return orderid;
+	}
+	public void setOrderid(String orderid) {
+		this.orderid = orderid;
+	}
+	public String getPaymentstatus() {
+		return paymentstatus;
+	}
+	public void setPaymentstatus(String paymentstatus) {
+		this.paymentstatus = paymentstatus;
+	}
+	
+	
 }

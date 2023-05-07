@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.team5.OrderService.model.LineItems;
+import com.team5.CommonService.model.LineItems;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,7 +26,7 @@ public class Order {
 	private String email;
 	private String address;
 	private String ordernote;
-	private List<LineItems> lineitems;
+	private List<com.team5.CommonService.model.LineItems> lineitems;
 	private Double total;
 	private String orderstatus;
 	

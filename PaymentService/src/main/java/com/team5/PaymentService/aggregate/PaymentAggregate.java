@@ -21,7 +21,12 @@ public class PaymentAggregate {
 	@AggregateIdentifier
 	private String paymentid;
 	private String orderid;
+	private Double total;
 	private String paymentstatus;
+	private String user;
+	//
+	
+
 	
 	public PaymentAggregate() {}
 	
@@ -37,6 +42,9 @@ public class PaymentAggregate {
         PaymentProcessedEvent paymentProcessedEvent = new PaymentProcessedEvent();
         paymentProcessedEvent.setOrderid(validatePaymentCommand.getOrderid());
         paymentProcessedEvent.setPaymentid(validatePaymentCommand.getPaymentid());
+        paymentProcessedEvent.setTotal(validatePaymentCommand.getTotal());
+        paymentProcessedEvent.setUser(validatePaymentCommand.getUser());
+     
         
         AggregateLifecycle.apply(paymentProcessedEvent);
         
@@ -47,6 +55,8 @@ public class PaymentAggregate {
 	public void on(PaymentProcessedEvent event) {
 		this.paymentid = event.getPaymentid();
 		this.orderid = event.getOrderid();
+		this.total = event.getTotal();
+		this.user = event.getUser();
 	}
 	
 	//cancel
@@ -57,6 +67,10 @@ public class PaymentAggregate {
         BeanUtils.copyProperties(cancelPaymentCommand, paymentCanceledEvent);
          
         AggregateLifecycle.apply(paymentCanceledEvent);
+        
+        /*log.info("event id " +
+                "Order Id: {}",
+                paymentCanceledEvent.getOrderid());*/
     }
 
     @EventSourcingHandler

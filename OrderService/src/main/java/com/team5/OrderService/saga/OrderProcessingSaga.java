@@ -16,14 +16,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.team5.CommonService.command.CancleOrderCommand;
 import com.team5.CommonService.command.CanclePaymentCommand;
 import com.team5.CommonService.command.CompleteOrderCommand;
+import com.team5.CommonService.command.EditCartCommand;
+import com.team5.CommonService.command.EditStockCommand;
+import com.team5.CommonService.command.ExcludingBalanceCommand;
 import com.team5.CommonService.command.ShipOrderCommand;
 import com.team5.CommonService.command.ValidatePaymentCommand;
+import com.team5.CommonService.events.EditCartEvent;
+import com.team5.CommonService.events.EditStockEvent;
+import com.team5.CommonService.events.ExcludedBalanceEvent;
 import com.team5.CommonService.events.OrderCancelledEvent;
 import com.team5.CommonService.events.OrderCompletedEvent;
 import com.team5.CommonService.events.OrderShippedEvent;
 import com.team5.CommonService.events.PaymentCanceledEvent;
 import com.team5.CommonService.events.PaymentProcessedEvent;
-import com.team5.CommonService.model.User;
+import com.team5.CommonService.model.OrderCommon;
+import com.team5.CommonService.model.User1;
+import com.team5.CommonService.queries.GetOrderQuery;
+import com.team5.CommonService.queries.GetUserBalanceQuery;
 import com.team5.CommonService.queries.GetUserPaymentDetailsQuery;
 import com.team5.OrderService.event.OrderCreatedEvent;
 
@@ -44,16 +53,15 @@ public class OrderProcessingSaga {
         log.info("OrderCreatedEvent in Saga for Order Id : {}",
                 event.getOrderid());
         
-        GetUserPaymentDetailsQuery getUserPaymentDetailsQuery = new GetUserPaymentDetailsQuery();
-        getUserPaymentDetailsQuery.setUser(event.getUser());
+        GetUserBalanceQuery getUserBalanceQuery = new GetUserBalanceQuery();
+        getUserBalanceQuery.setUser(event.getUser());
         
-        User user = null;
+        User1 user = null;
         
+        //catch if turn off user service or user invalid
         try {
-            user = queryGateway.query(
-                    getUserPaymentDetailsQuery,
-                    ResponseTypes.instanceOf(User.class)
-            ).join();
+            user = queryGateway.query(getUserBalanceQuery,ResponseTypes.instanceOf(User1.class)).join();
+           
 
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -61,23 +69,47 @@ public class OrderProcessingSaga {
             cancelOrderCommand(event.getOrderid());
             
         }
-		
-        ValidatePaymentCommand validatePaymentCommand = new ValidatePaymentCommand();
-        validatePaymentCommand.setPaymentid(UUID.randomUUID().toString());
-        validatePaymentCommand.setOrderid(event.getOrderid());
-        //validatePaymentCommand.setCartdetails(user.getCartdetails());
         
-        commandGateway.sendAndWait(validatePaymentCommand);
+        //
+        if (user.getBalance() >= event.getTotal()) {
+        	
+        	try {
+            	// if true throw
+                //if(true)
+                //    throw new Exception();
+            	
+            	ValidatePaymentCommand validatePaymentCommand = new ValidatePaymentCommand();
+                validatePaymentCommand.setPaymentid(UUID.randomUUID().toString());
+                validatePaymentCommand.setOrderid(event.getOrderid());
+                
+                validatePaymentCommand.setTotal(event.getTotal());
+                validatePaymentCommand.setUser(event.getUser());
+                
+                commandGateway.sendAndWait(validatePaymentCommand);  	
+            	
+            } catch (Exception e) {
+            	log.error(e.getMessage());
+            	
+            	cancelOrderCommand(event.getOrderid());
+            	
+            }
+        	
+        }
+        else {
+        	log.info("UserBalance's not enough");
+        	
+        	cancelOrderCommand(event.getOrderid());
+        }
+        
+  
 	}
     //cancle order
     private void cancelOrderCommand(String orderid) {
-        CancleOrderCommand cancelOrderCommand  = new CancleOrderCommand(orderid);
+        CancleOrderCommand cancelOrderCommand  = new CancleOrderCommand();
+        cancelOrderCommand.setOrderid(orderid);
+        
         commandGateway.send(cancelOrderCommand);
     }
-    
-    
-    
-    
     
     
 	
@@ -88,50 +120,153 @@ public class OrderProcessingSaga {
                 event.getOrderid()); 
         
         try {
-            if(true)
-                throw new Exception();
-
-            ShipOrderCommand shipOrderCommand = new ShipOrderCommand();
-            shipOrderCommand.setShipmentid(UUID.randomUUID().toString());
-            shipOrderCommand.setOrderid(event.getOrderid());
+            ExcludingBalanceCommand excludingBalanceCommand = new ExcludingBalanceCommand();
+            excludingBalanceCommand.setUser(event.getUser());
+            excludingBalanceCommand.setOrderid(event.getOrderid());
+            excludingBalanceCommand.setTotal(event.getTotal());
+            excludingBalanceCommand.setId(UUID.randomUUID().toString());
             
-            commandGateway.send(shipOrderCommand);
+            commandGateway.sendAndWait(excludingBalanceCommand);
         } catch (Exception e) {
             log.error(e.getMessage());
             // Start the compensating transaction
+            //log.error("toi day roi"); 
             cancelPaymentCommand(event);
+            
         }
+
 
     }
     //cancle payment
     private void cancelPaymentCommand(PaymentProcessedEvent event) {
-        CanclePaymentCommand canclePaymentCommand = new CanclePaymentCommand(event.getPaymentid(), event.getOrderid());
+        CanclePaymentCommand canclePaymentCommand = new CanclePaymentCommand();
+        canclePaymentCommand.setPaymentid(event.getPaymentid());
+        canclePaymentCommand.setOrderid(event.getOrderid());
         
         commandGateway.send(canclePaymentCommand);
+        
     }
     
-    
+    @SagaEventHandler(associationProperty = "orderid")
+    private void handle(ExcludedBalanceEvent event) {
+        
+        log.info("ExcludedBalanceEvent in Saga for Order Id : {}",
+                event.getOrderid()); 
+        
+        try {
+        	//if true throw
+            //if(true)
+            //    throw new Exception();
+
+
+            ShipOrderCommand shipOrderCommand = new ShipOrderCommand();
+            shipOrderCommand.setShipmentid(UUID.randomUUID().toString());
+            shipOrderCommand.setOrderid(event.getOrderid());
+            shipOrderCommand.setUser(event.getUser());
+            
+            commandGateway.sendAndWait(shipOrderCommand);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            // Start the compensating transaction
+            //log.error("toi day roi"); 
+            //cancelPaymentCommand(event);
+            
+        }
+        
+        
+    }
     
     
     
     @SagaEventHandler(associationProperty = "orderid")
     private void handle(OrderShippedEvent event) {
+    	
         log.info("OrderShippedEvent in Saga for Order Id : {}",
                 event.getOrderid());
         
-        CompleteOrderCommand completeOrderCommand = new CompleteOrderCommand();
-        completeOrderCommand.setOrderid(event.getOrderid());
-        completeOrderCommand.setOrderstatus("APPROVED");
+        /*GetOrderQuery getOrderQuery = new GetOrderQuery();
+        getOrderQuery.setOrderid(event.getOrderid());
         
-        commandGateway.send(completeOrderCommand);
         
+        OrderCommon ordercommon = null;
+        
+        //
+        try {
+        	ordercommon = queryGateway.query(getOrderQuery,ResponseTypes.instanceOf(OrderCommon.class)).join();
+           
 
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            //Start the Compensating transaction
+            cancelOrderCommand(event.getOrderid());
+            
+        }*/
+        
+    	try {
+        	// if true throw
+            //if(true)
+            //    throw new Exception();
+        	
+    		EditCartCommand editCartCommand = new EditCartCommand();
+    		editCartCommand.setCardid(UUID.randomUUID().toString());
+    		editCartCommand.setUser(event.getUser());
+    		editCartCommand.setCardstatus("ORDERED");
+    		editCartCommand.setOrderid(event.getOrderid());
+            
+            
+            commandGateway.sendAndWait(editCartCommand);  	
+        	
+        } catch (Exception e) {
+        	log.error(e.getMessage());
+        	
+        	//cancelOrderCommand(event.getOrderid());
+        	
+        }
+             
+    }
+    
+    @SagaEventHandler(associationProperty = "orderid")
+    private void handle(EditCartEvent event) {
+        
+        log.info("EdittedCardEvent in Saga for User Id : {}",
+                event.getUser()); 
+        
+        GetOrderQuery getOrderQuery = new GetOrderQuery();
+        getOrderQuery.setOrderid(event.getOrderid());
+        
+        
+        OrderCommon ordercommon = null;
+        
+        //
+        try {
+        	ordercommon = queryGateway.query(getOrderQuery,ResponseTypes.instanceOf(OrderCommon.class)).join();
+           
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            //Start the Compensating transaction
+            //cancelOrderCommand(event.getOrderid());
+            
+        }
+        
+        EditStockCommand editStockCommand = new EditStockCommand();
+        editStockCommand.setLineitems(ordercommon.getLineitems());
+        editStockCommand.setOrderid(event.getOrderid());
+        
+        commandGateway.sendAndWait(editStockCommand);
+        
+    }
+    
+    @SagaEventHandler(associationProperty = "orderid")
+    private void handle(EditStockEvent event) {
+    	
+        log.info("EditStockEvent in Saga for Order Id : {}",
+                event.getOrderid());
+             
     }
     
     
-    
-    
-    
+   
     @SagaEventHandler(associationProperty = "orderid")
     @EndSaga
     public void handle(OrderCompletedEvent event) {

@@ -7,18 +7,21 @@ import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.modelling.command.AggregateLifecycle;
 import org.axonframework.spring.stereotype.Aggregate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 
 import com.team5.CommonService.command.CancleOrderCommand;
 import com.team5.CommonService.command.CompleteOrderCommand;
 import com.team5.CommonService.events.OrderCancelledEvent;
 import com.team5.CommonService.events.OrderCompletedEvent;
+import com.team5.CommonService.model.LineItems;
 import com.team5.OrderService.command.CreateOrderCommand;
 import com.team5.OrderService.event.OrderCreatedEvent;
-import com.team5.OrderService.model.LineItems;
 
 @Aggregate
 public class OrderAggregate {
+	private static Logger log = LoggerFactory.getLogger(OrderAggregate.class);
 	
 	@AggregateIdentifier
 	private String orderid;
@@ -43,6 +46,10 @@ public class OrderAggregate {
     	BeanUtils.copyProperties(createOrderCommand, orderCreatedEvent);
     	
     	AggregateLifecycle.apply(orderCreatedEvent);
+    	
+    	/*log.info("line items " +
+                "Order Id: {}",
+                orderCreatedEvent.getLineitems().get(0).getProduct());*/
     }
     
     @EventSourcingHandler
@@ -77,7 +84,7 @@ public class OrderAggregate {
         this.orderstatus = event.getOrderstatus();
     }
     
-    //
+    
     @CommandHandler
     public void handle(CancleOrderCommand cancelOrderCommand) {
     	OrderCancelledEvent orderCancelledEvent = new OrderCancelledEvent();
@@ -85,12 +92,18 @@ public class OrderAggregate {
     	BeanUtils.copyProperties(cancelOrderCommand, orderCancelledEvent);
     	
     	AggregateLifecycle.apply(orderCancelledEvent);
+    	
+    	/*log.info("event orderid " +
+                "Order Id: {}",
+                orderCancelledEvent.getOrderid());*/
     }
 
     @EventSourcingHandler
     public void on(OrderCancelledEvent event) {
     	this.orderstatus = event.getOrderstatus();
     }
+    
+    
     
     
 }

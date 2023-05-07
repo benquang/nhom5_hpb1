@@ -1,0 +1,9 @@
+[{
+  "user": "baothy2906",
+  "lineitems": [
+        {"product": "64560cdc8a7ab02dffea23e7", "quantity": 1, "unitprice": 10.5},
+        {"product": "64560cdc8a7ab02dffea23e8", "quantity": 2, "unitprice": 10.5}
+    ],
+  "cartstatus": "fine"
+}
+]

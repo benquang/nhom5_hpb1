@@ -1,0 +1,17 @@
+[{
+  "userid": "baothy2906",
+  "password": "123",
+  "fullname": "Bao Thy",
+  "cardnumber": "0123456",
+  "balance": 10905.50,
+  "validmonth": 9
+},
+{
+  "userid": "ben1905",
+  "password": "123",
+  "fullname": "Quang Ben",
+  "cardnumber": "0123956",
+  "balance": 20905.5,
+  "validmonth": 9
+}
+]

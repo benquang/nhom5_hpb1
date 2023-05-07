@@ -7,13 +7,21 @@ import lombok.Data;
 @Builder
 public class User {
 
+	private String id;
 	private String userid;
 	private String password;
-	private String firstname;
-	private String lastname;
-	private CardDetails cartdetails;
+	private String fullname;
+	private String cardnumber;
+	private Double balance;
+	private int validmonth;
+	//private CardDetails cartdetails;
 	
-	
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
 	public String getUserid() {
 		return userid;
 	}
@@ -26,24 +34,44 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public String getFirstname() {
-		return firstname;
+	public String getFullname() {
+		return fullname;
 	}
-	public void setFirstname(String firstname) {
-		this.firstname = firstname;
+	public void setFullname(String fullname) {
+		this.fullname = fullname;
 	}
-	public String getLastname() {
-		return lastname;
+	public String getCardnumber() {
+		return cardnumber;
 	}
-	public void setLastname(String lastname) {
-		this.lastname = lastname;
+	public void setCardnumber(String cardnumber) {
+		this.cardnumber = cardnumber;
 	}
-	public CardDetails getCartdetails() {
+	public Double getBalance() {
+		return balance;
+	}
+	public void setBalance(Double balance) {
+		this.balance = balance;
+	}
+	public int getValidmonth() {
+		return validmonth;
+	}
+	public void setValidmonth(int validmonth) {
+		this.validmonth = validmonth;
+	}
+	
+	
+	
+	
+	
+	/*public CardDetails getCartdetails() {
 		return cartdetails;
 	}
 	public void setCartdetails(CardDetails cartdetails) {
 		this.cartdetails = cartdetails;
-	}
+	}*/
+	
+	
+	
 	
 	
 }

@@ -11,9 +11,18 @@ public class CancleOrderCommand {
 	private String orderid;
 	private String orderstatus = "CANCELLED";
 	
-	public CancleOrderCommand() {}
-	
-	public CancleOrderCommand(String orderid) {
+	public String getOrderid() {
+		return orderid;
+	}
+	public void setOrderid(String orderid) {
 		this.orderid = orderid;
 	}
+	public String getOrderstatus() {
+		return orderstatus;
+	}
+	public void setOrderstatus(String orderstatus) {
+		this.orderstatus = orderstatus;
+	}
+	
+	
 }

@@ -2,7 +2,8 @@ package com.team5.OrderService.event;
 
 import java.util.List;
 
-import com.team5.OrderService.model.LineItems;
+import com.team5.CommonService.model.LineItems;
+
 import lombok.Data;
 
 @Data

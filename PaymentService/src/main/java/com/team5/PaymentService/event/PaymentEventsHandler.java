@@ -24,6 +24,7 @@ public class PaymentEventsHandler {
         Payment payment = new Payment();
         payment.setPaymentid(event.getPaymentid());
         payment.setOrderid(event.getOrderid());
+        payment.setTotal(event.getTotal());
         payment.setPaymentstatus("COMPLETED");
         payment.setModified_date(new Date());
 

@@ -1,6 +1,8 @@
 package com.team5.OrderService.event;
 
 import org.axonframework.eventhandling.EventHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +13,8 @@ import com.team5.OrderService.data.OrderRepository;
 
 @Component
 public class OrderEventsHandler {
+	//private static Logger log = LoggerFactory.getLogger(OrderEventsHandler.class);
+
 	private OrderRepository orderRepository;
 	
     public OrderEventsHandler(OrderRepository orderRepository) {
@@ -22,6 +26,10 @@ public class OrderEventsHandler {
 		Order order = new Order();
 		BeanUtils.copyProperties(event, order);
 		orderRepository.save(order);
+		
+    	/*log.info("line items chinh la " +
+                "Order Id: {}",
+                event.getLineitems().get(0).getQuantity());*/
 		
 	}
 	
@@ -42,4 +50,5 @@ public class OrderEventsHandler {
 
         orderRepository.save(order);
     }
+    
 }

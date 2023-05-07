@@ -12,6 +12,9 @@ public class PaymentProcessedEvent {
 
 	private String paymentid;
 	private String orderid;
+	private Double total;
+	private String user;
+	
 	public String getPaymentid() {
 		return paymentid;
 	}
@@ -24,6 +27,24 @@ public class PaymentProcessedEvent {
 	public void setOrderid(String orderid) {
 		this.orderid = orderid;
 	}
+	public Double getTotal() {
+		return total;
+	}
+	public void setTotal(Double total) {
+		this.total = total;
+	}
+	public String getUser() {
+		return user;
+	}
+	public void setUser(String user) {
+		this.user = user;
+	}
+	
+	
+	
+	
+	
+	
 	
 	
 }

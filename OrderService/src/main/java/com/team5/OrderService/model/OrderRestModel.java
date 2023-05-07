@@ -2,6 +2,10 @@ package com.team5.OrderService.model;
 
 import java.util.List;
 
+import org.springframework.data.annotation.Reference;
+
+import com.team5.CommonService.model.LineItems;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,6 +22,7 @@ public class OrderRestModel {
 	private String ordernote;
 	private List<LineItems> lineitems;
 	private Double total;
+	
 	
 	public String getUser() {
 		return user;

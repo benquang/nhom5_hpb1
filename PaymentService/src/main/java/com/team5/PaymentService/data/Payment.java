@@ -19,6 +19,7 @@ public class Payment {
 	@Id
 	private String paymentid;
 	private String orderid;
+	private Double total;
 	private Date modified_date;
 	private String paymentstatus;
 	
@@ -34,6 +35,12 @@ public class Payment {
 	public void setOrderid(String orderid) {
 		this.orderid = orderid;
 	}
+	public Double getTotal() {
+		return total;
+	}
+	public void setTotal(Double total) {
+		this.total = total;
+	}
 	public Date getModified_date() {
 		return modified_date;
 	}
@@ -46,6 +53,10 @@ public class Payment {
 	public void setPaymentstatus(String paymentstatus) {
 		this.paymentstatus = paymentstatus;
 	}
+	
+	
+	
+	
 	
 	
 }
