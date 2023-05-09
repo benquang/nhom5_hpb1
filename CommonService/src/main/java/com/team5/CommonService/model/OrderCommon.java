@@ -2,11 +2,6 @@ package com.team5.CommonService.model;
 
 import java.util.List;
 
-import lombok.Builder;
-import lombok.Data;
-
-@Data
-@Builder
 public class OrderCommon {
 
 	private String orderid;

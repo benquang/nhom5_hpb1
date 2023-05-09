@@ -2,14 +2,10 @@ package com.team5.OrderService.command;
 
 import java.util.List;
 
-import lombok.Builder;
-import lombok.Data;
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
 import com.team5.CommonService.model.LineItems;
 
-@Data
-@Builder
 public class CreateOrderCommand {
 	
 	@TargetAggregateIdentifier

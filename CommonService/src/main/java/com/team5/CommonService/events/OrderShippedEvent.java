@@ -1,10 +1,6 @@
 package com.team5.CommonService.events;
 
-import lombok.Builder;
-import lombok.Data;
 
-@Data
-@Builder
 public class OrderShippedEvent {
 
 	private String shipmentid;

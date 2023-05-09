@@ -7,11 +7,6 @@ import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
 import com.team5.CommonService.model.LineItems;
 
-import lombok.Builder;
-import lombok.Data;
-
-@Data
-@Builder
 public class EditStockCommand {
 
 	@TargetAggregateIdentifier

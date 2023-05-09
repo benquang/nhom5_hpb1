@@ -3,8 +3,6 @@ package com.team5.CommonService.model;
 import lombok.Builder;
 import lombok.Data;
 
-@Data
-@Builder
 public class User1 {
 
 	private String id;
