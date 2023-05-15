@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.team5.CommonService.command.CancelUserBalanceCommand;
 import com.team5.CommonService.command.CancleOrderCommand;
 import com.team5.CommonService.command.CanclePaymentCommand;
 import com.team5.CommonService.command.CompleteOrderCommand;
@@ -21,6 +22,7 @@ import com.team5.CommonService.command.EditStockCommand;
 import com.team5.CommonService.command.ExcludingBalanceCommand;
 import com.team5.CommonService.command.ShipOrderCommand;
 import com.team5.CommonService.command.ValidatePaymentCommand;
+import com.team5.CommonService.events.CancelUserBalanceEvent;
 import com.team5.CommonService.events.EditCartEvent;
 import com.team5.CommonService.events.EditStockEvent;
 import com.team5.CommonService.events.ExcludedBalanceEvent;
@@ -102,16 +104,7 @@ public class OrderProcessingSaga {
         }
         
   
-	}
-    //cancle order
-    private void cancelOrderCommand(String orderid) {
-        CancleOrderCommand cancelOrderCommand  = new CancleOrderCommand();
-        cancelOrderCommand.setOrderid(orderid);
-        
-        commandGateway.send(cancelOrderCommand);
-    }
-    
-    
+	}  
 	
     @SagaEventHandler(associationProperty = "orderid")
     private void handle(PaymentProcessedEvent event) {
@@ -130,22 +123,14 @@ public class OrderProcessingSaga {
         } catch (Exception e) {
             log.error(e.getMessage());
             // Start the compensating transaction
-            //log.error("toi day roi"); 
+            log.error("Cannot connect to Payment"); 
             cancelPaymentCommand(event);
             
         }
 
 
     }
-    //cancle payment
-    private void cancelPaymentCommand(PaymentProcessedEvent event) {
-        CanclePaymentCommand canclePaymentCommand = new CanclePaymentCommand();
-        canclePaymentCommand.setPaymentid(event.getPaymentid());
-        canclePaymentCommand.setOrderid(event.getOrderid());
-        
-        commandGateway.send(canclePaymentCommand);
-        
-    }
+
     
     @SagaEventHandler(associationProperty = "orderid")
     private void handle(ExcludedBalanceEvent event) {
@@ -168,8 +153,8 @@ public class OrderProcessingSaga {
         } catch (Exception e) {
             log.error(e.getMessage());
             // Start the compensating transaction
-            //log.error("toi day roi"); 
-            //cancelPaymentCommand(event);
+            log.error("Cannot connect to ShipService"); 
+            cancelUserBalanceCommand(event);
             
         }
         
@@ -219,7 +204,7 @@ public class OrderProcessingSaga {
         } catch (Exception e) {
         	log.error(e.getMessage());
         	
-        	//cancelOrderCommand(event.getOrderid());
+        	cancelOrderCommand(event.getOrderid());
         	
         }
              
@@ -240,12 +225,10 @@ public class OrderProcessingSaga {
         //
         try {
         	ordercommon = queryGateway.query(getOrderQuery,ResponseTypes.instanceOf(OrderCommon.class)).join();
-           
-
         } catch (Exception e) {
             log.error(e.getMessage());
             //Start the Compensating transaction
-            //cancelOrderCommand(event.getOrderid());
+            cancelOrderCommand(event.getOrderid());
             
         }
         
@@ -262,7 +245,7 @@ public class OrderProcessingSaga {
     	
         log.info("EditStockEvent in Saga for Order Id : {}",
                 event.getOrderid());
-             
+        
     }
     
     
@@ -282,7 +265,6 @@ public class OrderProcessingSaga {
     }
     
     
-    
     @SagaEventHandler(associationProperty = "orderid")
     public void handle(PaymentCanceledEvent event) {
         log.info("PaymentCancelledEvent in Saga for Order Id : {}",
@@ -290,5 +272,42 @@ public class OrderProcessingSaga {
         cancelOrderCommand(event.getOrderid());
     }
 
-
+    @SagaEventHandler(associationProperty = "orderid")
+    public void handle(CancelUserBalanceEvent event) {
+    	log.info("CancelUserBalanceEvent in Saga for Order Id : {}",
+                event.getOrderid());
+    	cancelPaymentCommand(event);
+    }
+    
+    //------------------------------------------Cancel Function---------------------------------------------------
+    //cancle order
+    private void cancelOrderCommand(String orderid) {
+        CancleOrderCommand cancelOrderCommand  = new CancleOrderCommand();
+        cancelOrderCommand.setOrderid(orderid);
+        
+        commandGateway.send(cancelOrderCommand);
+    }
+    //cancle payment
+    private void cancelPaymentCommand(PaymentProcessedEvent event) {
+        CanclePaymentCommand canclePaymentCommand = new CanclePaymentCommand();
+        canclePaymentCommand.setPaymentid(event.getPaymentid());
+        canclePaymentCommand.setOrderid(event.getOrderid());
+        
+        commandGateway.send(canclePaymentCommand);
+    }
+    private void cancelPaymentCommand(CancelUserBalanceEvent event) {
+        CanclePaymentCommand canclePaymentCommand = new CanclePaymentCommand();
+        canclePaymentCommand.setOrderid(event.getOrderid());
+        commandGateway.send(canclePaymentCommand);
+    }
+    private void cancelUserBalanceCommand(ExcludedBalanceEvent event) {
+        CancelUserBalanceCommand cancelUserBalanceCommand= new CancelUserBalanceCommand();
+        cancelUserBalanceCommand.setOrderid(event.getOrderid());
+        cancelUserBalanceCommand.setUserid(event.getUser());
+        cancelUserBalanceCommand.setTotal(event.getTotal());
+        commandGateway.send(cancelUserBalanceCommand);
+    }
+    
+    
+    
 }

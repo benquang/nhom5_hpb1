@@ -8,8 +8,10 @@ import org.axonframework.spring.stereotype.Aggregate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.team5.CommonService.command.CancelUserBalanceCommand;
 import com.team5.CommonService.command.ExcludingBalanceCommand;
 import com.team5.CommonService.command.ShipOrderCommand;
+import com.team5.CommonService.events.CancelUserBalanceEvent;
 import com.team5.CommonService.events.ExcludedBalanceEvent;
 import com.team5.CommonService.events.OrderShippedEvent;
 
@@ -46,6 +48,21 @@ public class UserAggregate {
     	
     }
     
+    @CommandHandler
+    public UserAggregate(CancelUserBalanceCommand cancelUserBalanceCommand) {
+    	log.info("Executing  ExcludingBalanceCommand for " +
+                "User Id: {}",
+                cancelUserBalanceCommand.getUserid());
+    	CancelUserBalanceEvent cancelUserBalanceEvent = new CancelUserBalanceEvent();
+    	cancelUserBalanceEvent.setUserid(cancelUserBalanceCommand.getUserid());
+    	cancelUserBalanceEvent.setTotal(cancelUserBalanceCommand.getTotal());
+    	cancelUserBalanceEvent.setOrderid(cancelUserBalanceCommand.getOrderid());
+    	AggregateLifecycle.apply(cancelUserBalanceEvent);
+    	
+        log.info("cancelUserBalanceEvent Applied"); 
+    }
+    
+    
     @EventSourcingHandler
     public void on(ExcludedBalanceEvent event) {
     	this.id = event.getId();
@@ -53,4 +70,5 @@ public class UserAggregate {
     	this.orderid = event.getOrderid();
     	this.total = event.getTotal();
     }
+    
 }

@@ -4,6 +4,7 @@ import org.axonframework.eventhandling.EventHandler;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
+import com.team5.CommonService.events.CancelUserBalanceEvent;
 import com.team5.CommonService.events.ExcludedBalanceEvent;
 import com.team5.CommonService.events.OrderShippedEvent;
 import com.team5.UserService.data.User;
@@ -30,4 +31,17 @@ public class UserEventsHandler {
         userRepository.save(user);
 		
 	}
+	
+	@EventHandler
+	public void on(CancelUserBalanceEvent event) {
+        User user = userRepository.findByUserid(event.getUserid());
+        
+        Double currentbalance = user.getBalance();
+
+        user.setBalance(currentbalance+event.getTotal());
+
+        userRepository.save(user);
+		
+	}
+	
 }
