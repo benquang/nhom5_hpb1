@@ -1,23 +1,12 @@
-package com.team5.UserService.data;
+package com.team5.CommonService.model;
 
-import java.util.List;
-
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Document(value = "user")
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
 @Data
-public class User {
-	@Id
+@Builder
+public class UserCommon {
+
 	private String id;
 	private String userid;
 	private String password;
@@ -25,11 +14,15 @@ public class User {
 	private String cardnumber;
 	private Double balance;
 	private int validmonth;
+	//private CardDetails cartdetails;
+	private String tempid;
 	
-	//
-	private String lastorder;
-	private Double lastpay;
-	
+	public String getTempid() {
+		return tempid;
+	}
+	public void setTempid(String tempid) {
+		this.tempid = tempid;
+	}
 	public String getId() {
 		return id;
 	}
@@ -72,19 +65,20 @@ public class User {
 	public void setValidmonth(int validmonth) {
 		this.validmonth = validmonth;
 	}
-	public String getLastorder() {
-		return lastorder;
+	
+	
+	
+	
+	/*public CardDetails getCartdetails() {
+		return cartdetails;
 	}
-	public void setLastorder(String lastorder) {
-		this.lastorder = lastorder;
-	}
-	public Double getLastpay() {
-		return lastpay;
-	}
-	public void setLastpay(Double lastpay) {
-		this.lastpay = lastpay;
-	}
-
+	public void setCartdetails(CardDetails cartdetails) {
+		this.cartdetails = cartdetails;
+	}*/
+	
+	
+	
 	
 	
 }
+ 

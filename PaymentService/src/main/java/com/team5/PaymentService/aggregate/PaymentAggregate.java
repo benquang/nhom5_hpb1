@@ -9,10 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 
-import com.team5.CommonService.command.CanclePaymentCommand;
-import com.team5.CommonService.command.ValidatePaymentCommand;
+import com.team5.CommonService.command.PaymentCancelCommand;
+import com.team5.CommonService.command.PaymentCreateCommand;
 import com.team5.CommonService.events.PaymentCanceledEvent;
-import com.team5.CommonService.events.PaymentProcessedEvent;
+import com.team5.CommonService.events.PaymentCreatedEvent;
 
 @Aggregate
 public class PaymentAggregate {
@@ -21,52 +21,54 @@ public class PaymentAggregate {
 	@AggregateIdentifier
 	private String paymentid;
 	private String orderid;
-	private Double total;
 	private String paymentstatus;
-	private String user;
 	//
-	
-
 	
 	public PaymentAggregate() {}
 	
 	@CommandHandler
-	public PaymentAggregate(ValidatePaymentCommand validatePaymentCommand) {
+	public PaymentAggregate(PaymentCreateCommand command) {
 		//validate payment details
 		//publish payment processed event
-        log.info("Executing ValidatePaymentCommand for " +
+        log.info("Executing PaymentCreateCommand for " +
                 "Order Id: {} and Payment Id: {}",
-                validatePaymentCommand.getOrderid(),
-                validatePaymentCommand.getPaymentid());
+                command.getOrderid(),
+                command.getPaymentid());
         
-        PaymentProcessedEvent paymentProcessedEvent = new PaymentProcessedEvent();
-        paymentProcessedEvent.setOrderid(validatePaymentCommand.getOrderid());
-        paymentProcessedEvent.setPaymentid(validatePaymentCommand.getPaymentid());
-        paymentProcessedEvent.setTotal(validatePaymentCommand.getTotal());
-        paymentProcessedEvent.setUser(validatePaymentCommand.getUser());
-     
+        PaymentCreatedEvent event = new PaymentCreatedEvent();
+        event.setOrderid(command.getOrderid());
+        event.setPaymentid(command.getPaymentid());
+        event.setPaymentstatus(command.getPaymentstatus());  
         
-        AggregateLifecycle.apply(paymentProcessedEvent);
+        //user
+        event.setUser(command.getUser());
+        //event.setUserid(command.getUserid());
         
-        log.info("PaymentProcessedEvent Applied");   
+        
+        AggregateLifecycle.apply(event);
+        
+        log.info("PaymentCreatedEvent Applied");   
 	}
 	
 	@EventSourcingHandler
-	public void on(PaymentProcessedEvent event) {
+	public void on(PaymentCreatedEvent event) {
 		this.paymentid = event.getPaymentid();
 		this.orderid = event.getOrderid();
-		this.total = event.getTotal();
-		this.user = event.getUser();
+		this.paymentstatus = event.getPaymentstatus();
 	}
 	
 	//cancel
     @CommandHandler
-    public void handle(CanclePaymentCommand cancelPaymentCommand) {
-        PaymentCanceledEvent paymentCanceledEvent = new PaymentCanceledEvent();
+    public void handle(PaymentCancelCommand command) {
+        PaymentCanceledEvent event = new PaymentCanceledEvent();
+        event.setPaymentid(command.getPaymentid());
+        event.setOrderid(command.getOrderid());
+        event.setPaymentstatus(command.getPaymentstatus());
         
-        BeanUtils.copyProperties(cancelPaymentCommand, paymentCanceledEvent);
+        //
+        event.setUser(command.getUser());
          
-        AggregateLifecycle.apply(paymentCanceledEvent);
+        AggregateLifecycle.apply(event);
         
         /*log.info("event id " +
                 "Order Id: {}",

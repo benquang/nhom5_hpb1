@@ -11,20 +11,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 
-import com.team5.CommonService.command.CancleOrderCommand;
-import com.team5.CommonService.command.CompleteOrderCommand;
-import com.team5.CommonService.command.EditCartCommand;
-import com.team5.CommonService.events.EditCartEvent;
+import com.team5.CommonService.command.OrderCancelCommand;
+import com.team5.CommonService.command.OrderCompleteCommand;
+import com.team5.CommonService.command.PaymentCancelCommand;
+import com.team5.CommonService.command.CartCancelCommand;
+import com.team5.CommonService.command.CartRemoveCommand;
+import com.team5.CommonService.events.CartCancelledEvent;
+import com.team5.CommonService.events.CartRemovedEvent;
 import com.team5.CommonService.events.OrderCancelledEvent;
 import com.team5.CommonService.events.OrderCompletedEvent;
+import com.team5.CommonService.events.PaymentCanceledEvent;
 
 @Aggregate
 public class CartAggregate {
 	private static Logger log = LoggerFactory.getLogger(CartAggregate.class);
 	
 	@AggregateIdentifier
-	private String cardid;
-	private String user;
+	private String cart;
 	private String orderid;
 	private String cartstatus;
 	
@@ -32,35 +35,46 @@ public class CartAggregate {
     }
     
     @CommandHandler
-    public CartAggregate(EditCartCommand editCartCommand) {
+    public CartAggregate(CartRemoveCommand command) {
     	//validate command
-        log.info("Executing  EditCartCommand for " +
+        log.info("Executing  CardRemoveCommand for " +
                 "User Id: {}",
-                editCartCommand.getUser());
+                command.getUserid());
         
-    	EditCartEvent editCartEvent = new EditCartEvent();
+    	CartRemovedEvent event = new CartRemovedEvent();
     	
-    	BeanUtils.copyProperties(editCartCommand, editCartEvent);
+    	BeanUtils.copyProperties(command, event);
     	
-    	AggregateLifecycle.apply(editCartEvent);
+    	AggregateLifecycle.apply(event);
     	
-    	/*log.info("line items " +
-                "Order Id: {}",
-                orderCreatedEvent.getLineitems().get(0).getProduct());*/
-    	
-        log.info("EditCartEvent Applied"); 
+        log.info("CardRemovedEvent Applied"); 
     }
     
     @EventSourcingHandler
-    public void on(EditCartEvent event) {
-    	this.cardid = event.getCardid();
-    	this.user = event.getUser();
+    public void on(CartRemovedEvent event) {
+    	this.cart = event.getCart();
     	this.orderid = event.getOrderid();
     	this.cartstatus = event.getCardstatus();
 
   
     }
     
+	//cancel
+    @CommandHandler
+    public void handle(CartCancelCommand command) {
+    	
+        CartCancelledEvent event = new CartCancelledEvent();
+        
+        BeanUtils.copyProperties(command, event);    
+         
+        AggregateLifecycle.apply(event);
+        
+    }
+
+    @EventSourcingHandler
+    public void on(CartCancelledEvent event) {
+    	
+    }
 
     
 

@@ -22,6 +22,8 @@ public class Cart {
 	private String user;
 	private List<LineItems> lineitems;
 	private String cartstatus;
+	private String lastorder;
+	
 	public String getId() {
 		return id;
 	}
@@ -46,6 +48,14 @@ public class Cart {
 	public void setCartstatus(String cartstatus) {
 		this.cartstatus = cartstatus;
 	}
+	public String getLastorder() {
+		return lastorder;
+	}
+	public void setLastorder(String lastorder) {
+		this.lastorder = lastorder;
+	}
+	
+	
 	
 	
 	

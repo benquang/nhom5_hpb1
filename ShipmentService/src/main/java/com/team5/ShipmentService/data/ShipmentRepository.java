@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ShipmentRepository extends MongoRepository<Shipment, String> {
+	Shipment findByOrderid(String orderid);
 }

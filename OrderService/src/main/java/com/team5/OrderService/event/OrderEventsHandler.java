@@ -13,7 +13,6 @@ import com.team5.OrderService.data.OrderRepository;
 
 @Component
 public class OrderEventsHandler {
-	//private static Logger log = LoggerFactory.getLogger(OrderEventsHandler.class);
 
 	private OrderRepository orderRepository;
 	
@@ -26,10 +25,6 @@ public class OrderEventsHandler {
 		Order order = new Order();
 		BeanUtils.copyProperties(event, order);
 		orderRepository.save(order);
-		
-    	/*log.info("line items chinh la " +
-                "Order Id: {}",
-                event.getLineitems().get(0).getQuantity());*/
 		
 	}
 	

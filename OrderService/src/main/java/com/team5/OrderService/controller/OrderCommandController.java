@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.team5.OrderService.command.CreateOrderCommand;
+import com.team5.OrderService.command.OrderCreateCommand;
 import com.team5.OrderService.model.OrderRestModel;
 
 @RestController
@@ -25,25 +25,25 @@ public class OrderCommandController {
 	public String createOrder(@RequestBody OrderRestModel orderRestModel) {
 		String orderid = UUID.randomUUID().toString();
 		
-        CreateOrderCommand createOrderCommand = new CreateOrderCommand();
-        createOrderCommand.setOrderid(orderid);
+        OrderCreateCommand command = new OrderCreateCommand();
+        command.setOrderid(orderid);
         
-        createOrderCommand.setUser(orderRestModel.getUser());
-        createOrderCommand.setFullname(orderRestModel.getFullname());
-        createOrderCommand.setPhone(orderRestModel.getPhone());
-        createOrderCommand.setEmail(orderRestModel.getEmail());
-        createOrderCommand.setAddress(orderRestModel.getAddress());
-        createOrderCommand.setOrdernote(orderRestModel.getOrdernote());
-        createOrderCommand.setLineitems(orderRestModel.getLineitems());
+        command.setUser(orderRestModel.getUser());
+        command.setFullname(orderRestModel.getFullname());
+        command.setPhone(orderRestModel.getPhone());
+        command.setEmail(orderRestModel.getEmail());
+        command.setAddress(orderRestModel.getAddress());
+        command.setOrdernote(orderRestModel.getOrdernote());
+        command.setLineitems(orderRestModel.getLineitems());
         //
         Double total = 0.0;
         for (int i = 0; i < orderRestModel.getLineitems().size(); i++) {
         	total += orderRestModel.getLineitems().get(i).getUnitprice() * orderRestModel.getLineitems().get(i).getQuantity();
         }
-        createOrderCommand.setTotal(total);
-        createOrderCommand.setOrderstatus("CREATED");
+        command.setTotal(total);
+        command.setOrderstatus("CREATED");
         
-        commandGateway.sendAndWait(createOrderCommand);
+        commandGateway.sendAndWait(command);
 
 		return "Order Created";
 	}

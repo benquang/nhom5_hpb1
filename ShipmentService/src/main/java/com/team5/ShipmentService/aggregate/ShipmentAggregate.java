@@ -8,47 +8,75 @@ import org.axonframework.spring.stereotype.Aggregate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.team5.CommonService.command.ShipOrderCommand;
-import com.team5.CommonService.events.OrderShippedEvent;
+import com.team5.CommonService.command.ShipmentCancelCommand;
+import com.team5.CommonService.command.ShipmentCreateCommand;
+import com.team5.CommonService.events.ShipmentCreatedEvent;
+import com.team5.CommonService.events.ShipmentCancelledEvent;
 
 @Aggregate
 public class ShipmentAggregate {
+	
 	private static Logger log = LoggerFactory.getLogger(ShipmentAggregate.class);
-
 
 	@AggregateIdentifier
 	private String shipmentid;
 	private String orderid;
 	private String shipmentstatus;
-	private String user;
 	
     public ShipmentAggregate() {
     }
     
     @CommandHandler
-    public ShipmentAggregate(ShipOrderCommand shipOrderCommand) {
+    public ShipmentAggregate(ShipmentCreateCommand command) {
     	//validata command
     	//publish order shipped event
-        log.info("Executing  ShipOrderCommand for " +
+        log.info("Executing  ShipmentCreateCommand for " +
                 "Order Id: {}",
-                shipOrderCommand.getOrderid());
-    	OrderShippedEvent orderShippedEvent = new OrderShippedEvent();
-    	orderShippedEvent.setShipmentid(shipOrderCommand.getShipmentid());
-    	orderShippedEvent.setOrderid(shipOrderCommand.getOrderid());
-    	orderShippedEvent.setShipmentstatus("COMPLETED");
-    	orderShippedEvent.setUser(shipOrderCommand.getUser());
+                command.getOrderid());
+        
+    	ShipmentCreatedEvent event = new ShipmentCreatedEvent();
+    	event.setShipmentid(command.getShipmentid());
+    	event.setOrderid(command.getOrderid());
+    	event.setShipmentstatus(command.getShipmentstatus());
+    	
+    	//
+    	event.setUser(command.getUser());
+    	event.setPaymentid(command.getPaymentid());
     		
-    	AggregateLifecycle.apply(orderShippedEvent);
+    	AggregateLifecycle.apply(event);
     	
         log.info("OrderShippedEvent Applied"); 
     	
     }
     
     @EventSourcingHandler
-    public void on(OrderShippedEvent event) {
+    public void on(ShipmentCreatedEvent event) {
     	this.shipmentid = event.getShipmentid();
     	this.orderid = event.getOrderid();
     	this.shipmentstatus = event.getShipmentstatus();
-    	this.user = event.getUser();
     }
+    
+    
+	//cancel
+    @CommandHandler
+    public void handle(ShipmentCancelCommand command) {
+        ShipmentCancelledEvent event = new ShipmentCancelledEvent();
+        event.setShipmentid(command.getShipmentid());
+        event.setOrderid(command.getOrderid());
+        event.setShipmentstatus(command.getShipmentstatus());
+       
+        //
+        event.setUser(command.getUser());
+        event.setPaymentid(command.getPaymentid());
+         
+        AggregateLifecycle.apply(event);
+        
+    }
+
+    @EventSourcingHandler
+    public void on(ShipmentCancelledEvent event) {
+        this.shipmentstatus = event.getShipmentstatus();
+    }
+    
+
 }

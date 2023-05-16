@@ -1,9 +1,13 @@
-package com.team5.CommonService.events;
+package com.team5.CommonService.command;
 
-import lombok.Data;
+import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
-@Data
-public class PaymentCanceledEvent {
+import lombok.Value;
+
+@Value
+public class PaymentCancelCommand {
+
+	@TargetAggregateIdentifier
 	private String paymentid;
 	private String orderid;
 	private String paymentstatus;
@@ -42,6 +46,7 @@ public class PaymentCanceledEvent {
 	public void setUser(String user) {
 		this.user = user;
 	}
+	
 	
 	
 }

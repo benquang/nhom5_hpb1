@@ -1,17 +1,23 @@
 [{
+  "_id": "6abf95e5-13f9-4b6b-bcb1-010c44443022",
   "userid": "baothy2906",
   "password": "123",
   "fullname": "Bao Thy",
   "cardnumber": "0123456",
   "balance": 10905.50,
-  "validmonth": 9
+  "validmonth": 9,
+  "lastorder": "temp",
+  "lastpay": 10.5
 },
 {
+  "_id": "92c876db-d263-41a6-a9ed-b46c6d605629",
   "userid": "ben1905",
   "password": "123",
   "fullname": "Quang Ben",
   "cardnumber": "0123956",
   "balance": 20905.5,
-  "validmonth": 9
+  "validmonth": 9,
+  "lastorder": "temp",
+  "lastpay": 10.5
 }
 ]

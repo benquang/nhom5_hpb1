@@ -1,9 +1,15 @@
 package com.team5.CommonService.events;
 
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-public class PaymentCanceledEvent {
+@AllArgsConstructor
+@NoArgsConstructor
+public class PaymentCreatedEvent {
+
 	private String paymentid;
 	private String orderid;
 	private String paymentstatus;
@@ -43,5 +49,9 @@ public class PaymentCanceledEvent {
 		this.user = user;
 	}
 	
+	
+	
+	
+
 	
 }

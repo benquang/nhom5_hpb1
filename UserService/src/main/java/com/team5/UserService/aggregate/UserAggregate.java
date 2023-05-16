@@ -8,49 +8,64 @@ import org.axonframework.spring.stereotype.Aggregate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.team5.CommonService.command.ExcludingBalanceCommand;
-import com.team5.CommonService.command.ShipOrderCommand;
-import com.team5.CommonService.events.ExcludedBalanceEvent;
-import com.team5.CommonService.events.OrderShippedEvent;
+import com.team5.CommonService.command.BalanceExcludeCommand;
+import com.team5.CommonService.command.UserCancelCommand;
+import com.team5.CommonService.command.PaymentCancelCommand;
+import com.team5.CommonService.command.ShipmentCreateCommand;
+import com.team5.CommonService.events.UserCanceledEvent;
+import com.team5.CommonService.events.BalanceExcludedEvent;
+import com.team5.CommonService.events.ShipmentCreatedEvent;
+import com.team5.CommonService.events.PaymentCanceledEvent;
 
 @Aggregate
 public class UserAggregate {
 
 	private static Logger log = LoggerFactory.getLogger(UserAggregate.class);
+	
 	@AggregateIdentifier
-	private String id;
 	private String user;
-	private String orderid;
-	private Double total;
 	
     public UserAggregate() {
     }
     
     @CommandHandler
-    public UserAggregate(ExcludingBalanceCommand excludingBalanceCommand) {
-    	//validata command
-    	//publish order shipped event
-        log.info("Executing  ExcludingBalanceCommand for " +
-                "User Id: {}",
-                excludingBalanceCommand.getUser());
+    public UserAggregate(BalanceExcludeCommand command) {
+    	
+        log.info("Executing BalanceExcludeCommand for Order Id: {}, User Id: {}, Excluding - : {}",
+                command.getOrderid(), command.getUserid(), command.getTotal());
         
-    	ExcludedBalanceEvent excludedBalanceEvent = new ExcludedBalanceEvent();
-    	excludedBalanceEvent.setId(excludingBalanceCommand.getId());
-    	excludedBalanceEvent.setUser(excludingBalanceCommand.getUser());
-    	excludedBalanceEvent.setOrderid(excludingBalanceCommand.getOrderid());
-    	excludedBalanceEvent.setTotal(excludingBalanceCommand.getTotal());
+    	BalanceExcludedEvent event = new BalanceExcludedEvent();
+    	event.setUser(command.getUser());
+    	event.setOrderid(command.getOrderid());
+    	event.setUserid(command.getUserid());
+    	event.setTotal(command.getTotal());
     		
-    	AggregateLifecycle.apply(excludedBalanceEvent);
+    	AggregateLifecycle.apply(event);
     	
         log.info("ExcludedBalanceEvent Applied"); 
     	
     }
     
     @EventSourcingHandler
-    public void on(ExcludedBalanceEvent event) {
-    	this.id = event.getId();
+    public void on(BalanceExcludedEvent event) {
     	this.user = event.getUser();
-    	this.orderid = event.getOrderid();
-    	this.total = event.getTotal();
+    }
+    
+    
+	//cancel
+    @CommandHandler
+    public void handle(UserCancelCommand command) {
+
+        UserCanceledEvent event = new UserCanceledEvent();
+        event.setUser(command.getUser());
+        event.setOrderid(command.getOrderid());
+         
+        AggregateLifecycle.apply(event);
+        
+    }
+
+    @EventSourcingHandler
+    public void on(UserCanceledEvent event) {
+    	
     }
 }

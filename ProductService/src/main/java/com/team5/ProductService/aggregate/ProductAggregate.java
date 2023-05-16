@@ -9,11 +9,16 @@ import org.axonframework.modelling.command.AggregateLifecycle;
 import org.axonframework.spring.stereotype.Aggregate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 
-import com.team5.CommonService.command.EditStockCommand;
-import com.team5.CommonService.command.ShipOrderCommand;
-import com.team5.CommonService.events.EditStockEvent;
-import com.team5.CommonService.events.OrderShippedEvent;
+import com.team5.CommonService.command.CartCancelCommand;
+import com.team5.CommonService.command.ProductCancelCommand;
+import com.team5.CommonService.command.ProductExcludeCommand;
+import com.team5.CommonService.command.ShipmentCreateCommand;
+import com.team5.CommonService.events.CartCancelledEvent;
+import com.team5.CommonService.events.ProductCancelledEvent;
+import com.team5.CommonService.events.ProductExcludedEvent;
+import com.team5.CommonService.events.ShipmentCreatedEvent;
 import com.team5.CommonService.model.LineItems;
 
 @Aggregate
@@ -22,6 +27,7 @@ public class ProductAggregate {
 
 
 	@AggregateIdentifier
+	private String product;
 	private List<LineItems> lineitems;
 	private String orderid;
 	
@@ -29,26 +35,51 @@ public class ProductAggregate {
     }
     
     @CommandHandler
-    public ProductAggregate(EditStockCommand editStockCommand) {
+    public ProductAggregate(ProductExcludeCommand command) {
     	//validata command
     	//publish order shipped event
-        log.info("Executing  EditStockCommand for " +
+        log.info("Executing  ProductExcludeCommand for " +
                 "Order Id: {}",
-                editStockCommand.getOrderid());
+                command.getOrderid());
         
-        EditStockEvent editStockEvent = new EditStockEvent();
-        editStockEvent.setLineitems(editStockCommand.getLineitems());
-        editStockEvent.setOrderid(editStockCommand.getOrderid());
+        ProductExcludedEvent event = new ProductExcludedEvent();
+        event.setProduct(command.getProduct());
+        event.setLineitems(command.getLineitems());
+        event.setOrderid(command.getOrderid());
+        
+        //
+        event.setUser(command.getUser());
+        event.setPaymentid(command.getPaymentid());
+        event.setShipmentid(command.getShipmentid());
+        event.setCart(command.getCart());
     		
-    	AggregateLifecycle.apply(editStockEvent);
+    	AggregateLifecycle.apply(event);
     	
-        log.info("EditStockEvent Applied"); 
+        log.info("ProductExcludedEvent Applied"); 
     	
     }
     
     @EventSourcingHandler
-    public void on(EditStockEvent event) {
+    public void on(ProductExcludedEvent event) {
+    	this.product = event.getProduct();
     	this.lineitems = event.getLineitems();
     	this.orderid = event.getOrderid();
+    }
+    
+	//cancel
+    @CommandHandler
+    public void handle(ProductCancelCommand command) {
+    	
+        ProductCancelledEvent event = new ProductCancelledEvent();
+        
+        BeanUtils.copyProperties(command, event);    
+         
+        AggregateLifecycle.apply(event);
+        
+    }
+
+    @EventSourcingHandler
+    public void on(ProductCancelledEvent event) {
+    	
     }
 }

@@ -11,12 +11,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 
-import com.team5.CommonService.command.CancleOrderCommand;
-import com.team5.CommonService.command.CompleteOrderCommand;
+import com.team5.CommonService.command.OrderCancelCommand;
+import com.team5.CommonService.command.OrderCompleteCommand;
 import com.team5.CommonService.events.OrderCancelledEvent;
 import com.team5.CommonService.events.OrderCompletedEvent;
 import com.team5.CommonService.model.LineItems;
-import com.team5.OrderService.command.CreateOrderCommand;
+import com.team5.OrderService.command.OrderCreateCommand;
 import com.team5.OrderService.event.OrderCreatedEvent;
 
 @Aggregate
@@ -39,17 +39,14 @@ public class OrderAggregate {
     }
     
     @CommandHandler
-    public OrderAggregate(CreateOrderCommand createOrderCommand) {
-    	//validate command
-    	OrderCreatedEvent orderCreatedEvent = new OrderCreatedEvent();
+    public OrderAggregate(OrderCreateCommand command) {
     	
-    	BeanUtils.copyProperties(createOrderCommand, orderCreatedEvent);
+    	OrderCreatedEvent event = new OrderCreatedEvent();
     	
-    	AggregateLifecycle.apply(orderCreatedEvent);
+    	BeanUtils.copyProperties(command, event);
     	
-    	/*log.info("line items " +
-                "Order Id: {}",
-                orderCreatedEvent.getLineitems().get(0).getProduct());*/
+    	AggregateLifecycle.apply(event);
+    	
     }
     
     @EventSourcingHandler
@@ -63,12 +60,11 @@ public class OrderAggregate {
     	this.ordernote = event.getOrdernote();
     	this.lineitems = event.getLineitems();
     	this.total = event.getTotal();
-    	this.orderstatus = event.getOrderstatus();
-    	
+    	this.orderstatus = event.getOrderstatus();	
     }
     
     @CommandHandler
-    public void handle(CompleteOrderCommand completeOrderCommand) {
+    public void handle(OrderCompleteCommand completeOrderCommand) {
         //Validate The Command
         // Publish Order Completed Event
     	OrderCompletedEvent orderCompletedEvent = new OrderCompletedEvent();
@@ -86,16 +82,13 @@ public class OrderAggregate {
     
     
     @CommandHandler
-    public void handle(CancleOrderCommand cancelOrderCommand) {
-    	OrderCancelledEvent orderCancelledEvent = new OrderCancelledEvent();
+    public void handle(OrderCancelCommand command) {
+    	OrderCancelledEvent event = new OrderCancelledEvent();
     	
-    	BeanUtils.copyProperties(cancelOrderCommand, orderCancelledEvent);
+    	BeanUtils.copyProperties(command, event);
     	
-    	AggregateLifecycle.apply(orderCancelledEvent);
+    	AggregateLifecycle.apply(event);
     	
-    	/*log.info("event orderid " +
-                "Order Id: {}",
-                orderCancelledEvent.getOrderid());*/
     }
 
     @EventSourcingHandler

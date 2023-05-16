@@ -5,7 +5,8 @@ import org.springframework.stereotype.Component;
 
 import com.team5.CartService.data.Cart;
 import com.team5.CartService.data.CartRepository;
-import com.team5.CommonService.events.EditCartEvent;
+import com.team5.CommonService.events.CartCancelledEvent;
+import com.team5.CommonService.events.CartRemovedEvent;
 
 @Component
 public class CartEventsHandler {
@@ -18,10 +19,22 @@ public class CartEventsHandler {
     }
 
 	@EventHandler
-	public void on(EditCartEvent event) {
-        Cart cart = cartRepository.findByUser(event.getUser());
+	public void on(CartRemovedEvent event) {
+        Cart cart = cartRepository.findByUser(event.getUserid());
 
-        cart.setLineitems(null);
+        //cart.setLineitems(null);
+        cart.setCartstatus(event.getCardstatus());
+        cart.setLastorder(event.getOrderid());
+
+        cartRepository.save(cart);
+		
+	}
+	
+	@EventHandler
+	public void on(CartCancelledEvent event) {
+        Cart cart = cartRepository.findByLastorder(event.getOrderid());
+
+        //cart.setLineitems(null);
         cart.setCartstatus(event.getCardstatus());
 
         cartRepository.save(cart);
