@@ -7,7 +7,7 @@
 
 ## Installation
 - Download Axon Server: https://developer.axoniq.io/axon-server-se/download
-- java -jar axonserver.java
+- java -jar axonserver.jar
 
 
 
