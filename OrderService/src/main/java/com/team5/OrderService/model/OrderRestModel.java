@@ -24,6 +24,9 @@ public class OrderRestModel {
 	private Double total;
 	
 	
+	//
+	
+	
 	public String getUser() {
 		return user;
 	}

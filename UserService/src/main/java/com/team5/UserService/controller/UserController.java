@@ -29,8 +29,8 @@ public class UserController {
 		
 		User user = userRepository.findByUserid(userRestModel.getUserid());
 		
-		log.info("User : {}, {}",
-				userRestModel.getUserid(), userRestModel.getPassword()); 
+		//log.info("User : {}, {}",
+		//		userRestModel.getUserid(), userRestModel.getPassword()); 
 		
 		if(user == null) {
 			return null;
@@ -42,5 +42,19 @@ public class UserController {
 		
 		return null;
 	}
+	
+	@PostMapping("/info")
+	public User getUserInfo(@RequestBody UserRestModel userRestModel) {
+		
+		User user = userRepository.findByUserid(userRestModel.getUserid());
+		
+		if(user == null) {
+			return null;
+		}
+		
+		return user;
+	}
+	
+	
 
 }

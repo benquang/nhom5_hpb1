@@ -1,5 +1,7 @@
 package com.team5.OrderService.event;
 
+import java.util.Date;
+
 import org.axonframework.eventhandling.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +26,9 @@ public class OrderEventsHandler {
 	public void on(OrderCreatedEvent event) {
 		Order order = new Order();
 		BeanUtils.copyProperties(event, order);
+		
+		order.setOrderdate(new Date());
+		
 		orderRepository.save(order);
 		
 	}

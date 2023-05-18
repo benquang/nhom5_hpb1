@@ -1,5 +1,6 @@
 package com.team5.OrderService.event;
 
+import java.util.Date;
 import java.util.List;
 
 import com.team5.CommonService.model.LineItems;
@@ -19,6 +20,14 @@ public class OrderCreatedEvent {
 	private List<LineItems> lineitems;
 	private Double total;
 	private String orderstatus;
+	private Date orderdate;
+	
+	public Date getOrderdate() {
+		return orderdate;
+	}
+	public void setOrderdate(Date orderdate) {
+		this.orderdate = orderdate;
+	}
 	public String getOrderid() {
 		return orderid;
 	}

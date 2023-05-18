@@ -1,5 +1,6 @@
 package com.team5.OrderService.command;
 
+import java.util.Date;
 import java.util.List;
 
 import lombok.Builder;
@@ -23,6 +24,15 @@ public class OrderCreateCommand {
 	private List<com.team5.CommonService.model.LineItems> lineitems;
 	private Double total;
 	private String orderstatus;
+	
+	private Date orderdate;
+	
+	public Date getOrderdate() {
+		return orderdate;
+	}
+	public void setOrderdate(Date orderdate) {
+		this.orderdate = orderdate;
+	}
 	
 	public String getOrderid() {
 		return orderid;

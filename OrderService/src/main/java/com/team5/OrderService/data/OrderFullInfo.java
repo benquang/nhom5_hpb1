@@ -1,25 +1,11 @@
 package com.team5.OrderService.data;
 
-import java.util.Date;
 import java.util.List;
-
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.team5.CommonService.model.LineItems;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+public class OrderFullInfo {
 
-@Document(value = "order")
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-@Data
-public class Order {
-	@Id
 	private String orderid;
 	private String user;
 	private String fullname;
@@ -30,7 +16,9 @@ public class Order {
 	private List<LineItems> lineitems;
 	private Double total;
 	private String orderstatus;
-	private Date orderdate;
+	
+	private String paymentstatus;
+	private String shipmentstatus;
 	
 	public String getOrderid() {
 		return orderid;
@@ -92,18 +80,21 @@ public class Order {
 	public void setOrderstatus(String orderstatus) {
 		this.orderstatus = orderstatus;
 	}
-	public Date getOrderdate() {
-		return orderdate;
+	public String getPaymentstatus() {
+		return paymentstatus;
 	}
-	public void setOrderdate(Date orderdate) {
-		this.orderdate = orderdate;
+	public void setPaymentstatus(String paymentstatus) {
+		this.paymentstatus = paymentstatus;
+	}
+	public String getShipmentstatus() {
+		return shipmentstatus;
+	}
+	public void setShipmentstatus(String shipmentstatus) {
+		this.shipmentstatus = shipmentstatus;
 	}
 	
 	
 	
-	
-	
-
 	
 	
 }
