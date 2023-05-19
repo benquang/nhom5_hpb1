@@ -299,11 +299,11 @@ public class OrderProcessingSaga {
         }
         
       
-        log.info("a {} {}", ordercommon.getLineitems().get(0).getProduct(), ordercommon.getLineitems().get(0).getQuantity());
-        log.info("a {} {}", ordercommon.getLineitems().get(1).getProduct(), ordercommon.getLineitems().get(1).getQuantity());
+        //log.info("a {} {}", ordercommon.getLineitems().get(0).getProduct(), ordercommon.getLineitems().get(0).getQuantity());
+        //log.info("a {} {}", ordercommon.getLineitems().get(1).getProduct(), ordercommon.getLineitems().get(1).getQuantity());
 
-        log.info("a {} {}", productcommon.getLineitems().get(0).getProduct(), productcommon.getLineitems().get(0).getQuantity());
-        log.info("a {} {}", productcommon.getLineitems().get(1).getProduct(), productcommon.getLineitems().get(1).getQuantity());
+        //log.info("a {} {}", productcommon.getLineitems().get(0).getProduct(), productcommon.getLineitems().get(0).getQuantity());
+        //log.info("a {} {}", productcommon.getLineitems().get(1).getProduct(), productcommon.getLineitems().get(1).getQuantity());
 
         //
     	for (int i = 0; i < productcommon.getLineitems().size(); i++) {

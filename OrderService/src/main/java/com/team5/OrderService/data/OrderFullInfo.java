@@ -1,5 +1,6 @@
 package com.team5.OrderService.data;
 
+import java.util.Date;
 import java.util.List;
 
 import com.team5.CommonService.model.LineItems;
@@ -16,9 +17,11 @@ public class OrderFullInfo {
 	private List<LineItems> lineitems;
 	private Double total;
 	private String orderstatus;
+	private Date orderdate;
 	
 	private String paymentstatus;
 	private String shipmentstatus;
+	
 	
 	public String getOrderid() {
 		return orderid;
@@ -91,6 +94,12 @@ public class OrderFullInfo {
 	}
 	public void setShipmentstatus(String shipmentstatus) {
 		this.shipmentstatus = shipmentstatus;
+	}
+	public Date getOrderdate() {
+		return orderdate;
+	}
+	public void setOrderdate(Date orderdate) {
+		this.orderdate = orderdate;
 	}
 	
 	

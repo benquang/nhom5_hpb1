@@ -1,10 +1,14 @@
 package com.team5.CartService.events;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.axonframework.eventhandling.EventHandler;
 import org.springframework.stereotype.Component;
 
 import com.team5.CartService.data.Cart;
 import com.team5.CartService.data.CartRepository;
+import com.team5.CartService.data.LineItems;
 import com.team5.CommonService.events.CartCancelledEvent;
 import com.team5.CommonService.events.CartRemovedEvent;
 
@@ -22,7 +26,13 @@ public class CartEventsHandler {
 	public void on(CartRemovedEvent event) {
         Cart cart = cartRepository.findByUser(event.getUserid());
 
-        //cart.setLineitems(null);
+        for (int i = cart.getLineitems().size() - 1; i >= 0; i--) {
+        	cart.getLineitems().remove(i);
+        }
+        //List<LineItems> newlist = new ArrayList<>();
+        
+        //cart.setLineitems(newlist);
+        
         cart.setCartstatus(event.getCardstatus());
         cart.setLastorder(event.getOrderid());
 

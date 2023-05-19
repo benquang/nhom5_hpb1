@@ -1,10 +1,113 @@
 [{
+  "_id": {
+    "$oid": "6464c6404a8801230cace8f7"
+  },
+  "user": "thor1905",
+  "lineitems": [
+    {
+      "product": "64560cdc8a7ab02dffea23e7",
+      "quantity": 2,
+      "unitprice": 10.5
+    },
+    {
+      "product": "64560cdc8a7ab02dffea23e8",
+      "quantity": 3,
+      "unitprice": 10.5
+    }
+  ],
+  "cartstatus": "ORDERED",
+  "lastorder": "5353a678-e9d1-4972-ad97-4983ea245058",
+  "_class": "com.team5.CartService.data.Cart"
+},{
+  "_id": {
+    "$oid": "64662ee5ad01e0743bac8dc4"
+  },
   "user": "tridung",
   "lineitems": [
-        {"product": "64560cdc8a7ab02dffea23e7", "productname": "Accadia", "quantity": 1, "unitprice": 10.5},
-        {"product": "64560cdc8a7ab02dffea23e8", "productname": "Ageratum conyzoides", "quantity": 2, "unitprice": 10.5}
-    ],
+    {
+      "product": "64560cdc8a7ab02dffea23e7",
+      "quantity": 1,
+      "unitprice": 10.5
+    },
+    {
+      "product": "64560cdc8a7ab02dffea23e8",
+      "quantity": 4,
+      "unitprice": 10.5
+    }
+  ],
+  "cartstatus": "fine",
+  "lastorder": "temp",
+  "_class": "com.team5.CartService.data.Cart"
+},{
+  "_id": {
+    "$oid": "64664893ad01e0743bac8dca"
+  },
+  "user": "minhduy",
+  "lineitems": [
+    {
+      "product": "64560cdc8a7ab02dffea23e9",
+      "quantity": 3
+    }
+  ],
+  "cartstatus": "fine",
+  "lastorder": "temp",
+  "_class": "com.team5.CartService.data.Cart"
+},{
+  "_id": {
+    "$oid": "6466fa756768ff82973654fc"
+  },
+  "user": "ngocduy",
+  "lineitems": [],
+  "cartstatus": "ORDERED",
+  "lastorder": "94c32aea-b272-40b7-9dbe-bd13430efc58",
+  "_class": "com.team5.CartService.data.Cart"
+},{
+  "_id": {
+    "$oid": "6466fdad6768ff82973654fe"
+  },
+  "user": "trungkien",
+  "lineitems": [],
   "cartstatus": "fine",
   "lastorder": "temp"
-}
-]
+},{
+  "_id": {
+    "$oid": "6466fdda6768ff8297365501"
+  },
+  "user": "duclinh",
+  "lineitems": [],
+  "cartstatus": "ORDERED",
+  "lastorder": "b3b51e78-e431-48a3-bcae-76d1d4d943d2",
+  "_class": "com.team5.CartService.data.Cart"
+},{
+  "_id": {
+    "$oid": "6466fde36768ff8297365502"
+  },
+  "user": "quangthang",
+  "lineitems": [],
+  "cartstatus": "fine",
+  "lastorder": "temp"
+},{
+  "_id": {
+    "$oid": "64670607695a317fb16c9aef"
+  },
+  "user": "tridung1",
+  "lineitems": [
+    {
+      "product": "64560cdc8a7ab02dffea23ea",
+      "quantity": 1,
+      "unitprice": 0
+    }
+  ],
+  "cartstatus": "ACTIVE",
+  "lastorder": "none",
+  "_class": "com.team5.CartService.data.Cart"
+},{
+  "_id": {
+    "$oid": "6467083f695a317fb16c9af0"
+  },
+  "user": "minhduy1",
+  "lineitems": [],
+  "cartstatus": "ACTIVE",
+  "lastorder": "none",
+  "_class": "com.team5.CartService.data.Cart"
+}]

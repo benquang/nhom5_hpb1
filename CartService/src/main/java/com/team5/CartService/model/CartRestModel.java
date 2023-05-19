@@ -5,7 +5,7 @@ public class CartRestModel {
 	private String user;
 	private String product;
 	private int quantity;
-	//private Double unitprice;
+	private Double unitprice;
 
 	public String getUser() {
 		return user;
@@ -31,13 +31,13 @@ public class CartRestModel {
 		this.quantity = quantity;
 	}
 
-	/*public Double getUnitprice() {
+	public Double getUnitprice() {
 		return unitprice;
 	}
 
 	public void setUnitprice(Double unitprice) {
 		this.unitprice = unitprice;
-	}*/
+	}
 	
 	
 	

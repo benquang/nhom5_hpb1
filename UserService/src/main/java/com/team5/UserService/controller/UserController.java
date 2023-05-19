@@ -55,6 +55,26 @@ public class UserController {
 		return user;
 	}
 	
+	@PostMapping("/register")
+	public User register(@RequestBody UserRestModel userRestModel) {
+		
+		User user = new User();
+		user.setUserid(userRestModel.getUserid());
+		user.setPassword(userRestModel.getPassword());
+		user.setFullname(userRestModel.getFullname());
+		user.setCardnumber(userRestModel.getCardnumber());
+		
+		user.setBalance(10000.0);
+		user.setValidmonth(9);
+		
+		user.setLastorder("none");
+		user.setLastpay(1.0);
+		
+		userRepository.save(user);
+		
+		return user;
+	}
+	
 	
 
 }

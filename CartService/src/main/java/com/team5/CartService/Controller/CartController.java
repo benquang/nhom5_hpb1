@@ -1,5 +1,8 @@
 package com.team5.CartService.Controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -37,6 +40,16 @@ public class CartController {
         
 		Cart cart = cartrepository.findByUser(user);
 		
+		if(cart == null) {
+			Cart cart1 = new Cart();
+			cart1.setUser(user);
+			cart1.setLineitems(new ArrayList());
+			cart1.setCartstatus("ACTIVE");
+			cart1.setLastorder("none");		
+			
+			return cartrepository.save(cart1);
+		}
+		
 		return cart;
 		
 	}
@@ -47,8 +60,10 @@ public class CartController {
 		
         //log.info("User Id: {}",
         //		cartrestmodel.getUser());
-        
 		Cart cart = cartrepository.findByUser(cartrestmodel.getUser());
+		if (cart == null) {
+			return 0;
+		}
 		
 		int quantity = 0;
 		
@@ -67,6 +82,7 @@ public class CartController {
 	@PostMapping
 	public int upProductQuantity(@RequestBody CartRestModel cartrestmodel) {
    
+		
 		Cart cart = cartrepository.findByUser(cartrestmodel.getUser());
 		
 		int quantity = cartrestmodel.getQuantity();
@@ -76,6 +92,7 @@ public class CartController {
 			if (cart.getLineitems().get(i).getProduct().equals(cartrestmodel.getProduct())) {
 				
 				cart.getLineitems().get(i).setQuantity(quantity);
+				cart.getLineitems().get(i).setUnitprice(cartrestmodel.getUnitprice());
 				
 				//huy san pham trong cart
 				if(quantity == 0) {
@@ -95,8 +112,10 @@ public class CartController {
 			LineItems lineitem = new LineItems();
 			lineitem.setProduct(cartrestmodel.getProduct());
 			lineitem.setQuantity(cartrestmodel.getQuantity());
-			//lineitem.setUnitprice(cartrestmodel.getUnitprice());
+			lineitem.setUnitprice(cartrestmodel.getUnitprice());
 			
+			
+
 			
 			cart.getLineitems().add(lineitem);
 			
@@ -106,4 +125,5 @@ public class CartController {
 		
 		return quantity;
 	}
+	
 }

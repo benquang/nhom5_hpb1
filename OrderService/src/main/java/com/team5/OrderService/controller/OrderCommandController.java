@@ -93,6 +93,7 @@ public class OrderCommandController {
 			temp.setOrdernote(orders.get(i).getOrdernote());
 			temp.setTotal(orders.get(i).getTotal());
 			temp.setOrderstatus(orders.get(i).getOrderstatus());
+			temp.setOrderdate(orders.get(i).getOrderdate());
 			
 			//products
 			GetProductQuery getproductquery = new GetProductQuery();
