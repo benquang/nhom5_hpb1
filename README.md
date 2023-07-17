@@ -3,7 +3,7 @@
 
 ## Requirements
 - Axon Server 4.5.6
-- Srping
+- Spring
 
 ## Installation
 - Download Axon Server: https://developer.axoniq.io/axon-server-se/download
